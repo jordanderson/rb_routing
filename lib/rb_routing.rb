@@ -1,19 +1,15 @@
+require 'active_record'
 require 'pg'
-require 'rgeo'
-require 'activerecord-postgis-adapter'
 
-require "rubyrouting/version"
-require "rubyrouting/connection"
+require "rb_routing/version"
+require "rb_routing/connection"
+require "rb_routing/base"
+require "rb_routing/exceptions"
+require "rb_routing/router/trsp"
+require "rb_routing/router/dijkstra"
+require "rb_routing/router/a_star"
 
-module Rubyrouting
-
-  ActiveRecord::Base.establish_connection(
-    :adapter  => 'postgis',
-    :database => 'routing',
-    :username => 'postgres',
-    :password => 'postgres',
-    :host     => 'localhost'
-  )
+module RbRouting
 
   def self.osm2pgrouting_available?
     return true if !`osm2pgrouting`.blank?
@@ -28,13 +24,12 @@ module Rubyrouting
     additional_options << "-host #{options[:host]}" if !options[:host].blank?
     additional_options << "-port #{options[:port]}" if !options[:port].blank?
     additional_options << "-passwd #{options[:password]}" if !options[:password].blank?
-    additional_options << "-clean" if !options[:clean].blank?
-    additional_options << "-skipnodes" if !options[:skipnodes].blank?
+    additional_options << "-clean" if !options[:clean_tables].blank?
+    additional_options << "-skipnodes" if !options[:skip_nodes].blank?
     additional_options << "-prefixtables #{options[:prefixtables]}" if !options[:prefixtables].blank?
 
     puts "Running osm2pgrouting -file #{file_name} -dbname #{database} -user #{user} -conf #{config_file} #{additional_options.join(' ')}"
     value = `osm2pgrouting -file #{file_name} -dbname #{database} -user #{user} -conf #{config_file} #{additional_options.join(' ')}`
-    puts value
     return true
   end
 
@@ -49,20 +44,5 @@ module Rubyrouting
 
   end
 
-  def self.turn_restricted_shortest_path( sql,
-                                          source,
-                                          target,
-                                          directed,
-                                          has_reverse_cost,
-                                          restrict_sql    
-                                        )
-
-    "SELECT seq, id1 AS node, id2 AS edge, cost
-        FROM pgr_trsp(
-                'SELECT id, source, target, cost FROM edge_table',
-                7, 12, false, false
-        );"
-
-  end
 
 end

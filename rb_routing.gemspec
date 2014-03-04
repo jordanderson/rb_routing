@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'rubyrouting/version'
+require 'rb_routing/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "rubyrouting"
-  spec.version       = Rubyrouting::VERSION
+  spec.name          = "rb_routing"
+  spec.version       = RbRouting::VERSION
   spec.authors       = ["Jordan Anderson"]
   spec.email         = ["jordandrsn@gmail.com"]
   spec.description   = "A pgRouting wrapper in ruby"
@@ -22,5 +22,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_dependency "pg"
   spec.add_dependency "activerecord"
-  spec.add_dependency "activerecord-postgis-adapter"
+
 end
