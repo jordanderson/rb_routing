@@ -42,8 +42,16 @@ module RbRouting
       @connection ||= ::RbRouting::Connection.new(@db_options)
     end
 
-    def build_cost_sql
-      
+    def errors
+      @errors
+    end
+
+    def result 
+      @result
+    end
+
+    def path
+      @path
     end
 
     def cost_sql
@@ -71,7 +79,7 @@ module RbRouting
     end
 
     def routing_function_params(params)
-      routing_query.values.flatten.map {|v| params[v] }.join(", ")
+      routing_query.values.flatten.map {|v| params[v] }.reject {|p| p.nil? }.join(", ")
     end
 
     def routing_query_to_sql(params={})
@@ -87,37 +95,35 @@ module RbRouting
     end
 
     def validations(options = {})
-      errors = []
+      @errors = []
       parameters_spec.each do |key, value|
-        errors << "'#{key}'" if options[key].blank? and value == :required
+        @errors << "'#{key}'" if options[key].blank? and value == :required
       end
 
-      raise MissingRoutingParameter, errors.join(", ") unless errors.blank? 
+      raise MissingRoutingParameter, @errors.join(", ") unless @errors.blank? 
       
-      errors
-    end
-
-    def pre_import_osm(file_name, config_file, options={})
-
+      @errors
     end
 
     def import_osm_data(file_name, config_file, options={})
-      pre_import_osm(file_name, config_file, options)
       ::RbRouting::import_osm_data(file_name, @db, @user, config_file, options.merge(@db_options).merge(@import_options))
-      post_import_osm(file_name, config_file, options)
-    end
-
-    def post_import_osm(file_name, config_file, options={})
-
     end
 
     def run(options = {})
       connect
       options = set_defaults(options)
-      errors = validations(options)
+      validations(options)
 
       puts "Routing options: #{options}"
-      connection.exec(results_sql(options)).to_a
+      begin
+        @result = connection.exec(results_sql(options)).to_a
+        @path = RbRouting::Path.new @result
+      rescue => e
+        @errors << "#{e}"
+        return false
+      end
+
+      true
     end
 
   end

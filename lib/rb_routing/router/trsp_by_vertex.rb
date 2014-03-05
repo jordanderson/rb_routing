@@ -1,7 +1,7 @@
 module RbRouting
   module Router
 
-    class Trsp < RbRouting::Base
+    class TrspByVertex < RbRouting::Base
 
       def parameters_spec
         {
@@ -15,7 +15,7 @@ module RbRouting
       end
 
       def routing_query
-        {:pgr_trsp => [:sql, :source, :target, :directed, :has_reverse_cost]}
+        {:pgr_trsp => [:sql, :source, :target, :directed, :has_reverse_cost, :turn_restriction_sql]}
       end
 
       def cost_sql

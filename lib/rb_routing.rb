@@ -1,11 +1,15 @@
 require 'active_record'
 require 'pg'
+require 'json'
 
 require "rb_routing/version"
 require "rb_routing/connection"
 require "rb_routing/base"
 require "rb_routing/exceptions"
-require "rb_routing/router/trsp"
+require "rb_routing/path_step"
+require "rb_routing/path"
+require "rb_routing/router/trsp_by_vertex"
+require "rb_routing/router/trsp_by_edge"
 require "rb_routing/router/dijkstra"
 require "rb_routing/router/a_star"
 
