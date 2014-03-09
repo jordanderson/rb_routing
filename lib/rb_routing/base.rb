@@ -3,7 +3,7 @@ module RbRouting
   class Base
 
     def set_db_params(options = {})
-      @db           ||= options[:database]      || "routing"
+      @db           ||= options[:database]
       @host         ||= options[:host]          || "localhost"
       @user         ||= options[:user] 
       @port         ||= options[:port]          || "5432"
@@ -11,15 +11,17 @@ module RbRouting
       @table_prefix ||= options[:table_prefix]
       @db_options    = {:database => @db, :host => @host, :user => @user, 
                         :port => @port, :password => @password, :table_prefix => @table_prefix}
+
+      connect
     end
 
     def set_routing_params(options = {})
-      @id_field           ||= options[:id]            || "gid"
-      @source_field       ||= options[:source]        || "source"
-      @target_field       ||= options[:target]        || "target"
-      @cost_field         ||= options[:cost]          || "length"
-      @reverse_cost_field ||= options[:reverse_cost]  || "length"
-      @edge_table         ||= options[:edge_table]    || "ways"
+      @id_field           ||= options[:id]              || :gid
+      @source_field       ||= options[:source]          || :source
+      @target_field       ||= options[:target]          || :target
+      @cost_field         ||= options[:cost]            || :length
+      @reverse_cost_field ||= options[:reverse_cost]    || :length
+      @edge_table         ||= options[:edge_table]      || :ways
     end
 
     def set_import_params(options = {})
@@ -54,40 +56,70 @@ module RbRouting
       @path
     end
 
-    def cost_sql
+    def routing_function_defaults
       "define in subclass"
     end
 
-    def results_sql
+    def routing_function_definition
       "define in subclass"
     end
 
-    def explain
-      "define in subclass"
+    def cost_query_select
+      {
+        'id'            => @id_field,
+        'source'        => @source_field,
+        'target'        => @target_field,
+        'cost'          => @cost_field,
+        'reverse_cost'  => @reverse_cost_field 
+      }
     end
 
-    def parameters_spec
-      "define in subclass"
+    def cost_query_from
+      @edge_table
     end
 
-    def routing_query
-      "define in subclass"
+    def cost_query_where
+      ""
+    end
+
+    def results_query_select
+      {
+        'seq'           => :seq,
+        'node'          => :id1,
+        'edge'          => :id2,
+        'cost'          => :cost,
+        'reverse_cost'  => :cost
+      }
+    end
+
+    def results_query_from
+      Sequel.function(routing_function, *routing_function_params)
+    end
+
+    def results_query_where
+      ""
+    end
+
+    def cost_query
+      select_args = cost_query_select.map {|k,v| Sequel.as(v, k) }
+      connection.select(*select_args).from(cost_query_from).where(cost_query_where)
+    end
+
+    def results_query
+      select_args = results_query_select.map {|k,v| Sequel.as(v, k) }
+      connection.select(*select_args).from(results_query_from).where(results_query_where)
     end
 
     def routing_function 
-      routing_query.keys.first.to_s
+      routing_function_definition.keys.first
     end
 
-    def routing_function_params(params)
-      routing_query.values.flatten.map {|v| params[v] }.reject {|p| p.nil? }.join(", ")
-    end
-
-    def routing_query_to_sql(params={})
-      "#{routing_function}(#{routing_function_params(params)})"
+    def routing_function_params
+      routing_function_definition.values.flatten.map {|v| @run_options[v] }.reject {|p| p.nil? }
     end
 
     def set_defaults(options = {})
-      parameters_spec.each do |key, value|
+      routing_function_defaults.each do |key, value|
         options[key] = value if options[key].blank? and ![:optional, :required].include?(value) 
       end
 
@@ -96,7 +128,7 @@ module RbRouting
 
     def validations(options = {})
       @errors = []
-      parameters_spec.each do |key, value|
+      routing_function_defaults.each do |key, value|
         @errors << "'#{key}'" if options[key].blank? and value == :required
       end
 
@@ -110,16 +142,16 @@ module RbRouting
     end
 
     def run(options = {})
-      connect
       options = set_defaults(options)
       validations(options)
+      @run_options = options
 
       puts "Routing options: #{options}"
       begin
-        @result = connection.exec(results_sql(options)).to_a
+        @result = results_query.to_a
         @path = RbRouting::Path.new @result
       rescue => e
-        @errors << "#{e}"
+        @errors << "#{e}: #{e.backtrace}"
         return false
       end
 

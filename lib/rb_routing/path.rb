@@ -5,13 +5,14 @@ module RbRouting
     def initialize(path_steps)
       @steps = []
 
+      raise "Error: Can't create path with #{path_steps.class} objects. Please use an Array." if path_steps.class != Array
       path_steps.each do |step|
         if step.class == RbRouting::PathStep
           @steps << step
         elsif step.class == Hash
           @steps << RbRouting::PathStep.new(step)
         else
-          raise "Error: Can't create path with #{step.class} objects"
+          raise "Error: Can't create path with #{step.class} objects. Please use PathSteps or Hashes."
           return false
         end
       end

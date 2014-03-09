@@ -11,7 +11,7 @@ module RbRouting
       @host     = options[:host] || "localhost"
 
       pw = options[:password].blank? ? {} : {:password => options[:password]}
-      @pg = PG.connect({:dbname => @database, :port => @port, :host => @host, :user => @user}.merge(pw))
+      @pg = Sequel.postgres({:database => @database, :port => @port, :host => @host, :user => @user}.merge(pw))
     end
 
   end

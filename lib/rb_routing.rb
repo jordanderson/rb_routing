@@ -1,9 +1,13 @@
-require 'active_record'
+require 'active_support'
+require 'active_support/core_ext/object/blank.rb'
 require 'pg'
+require 'sequel'
 require 'json'
+require 'debugger'
 
 require "rb_routing/version"
 require "rb_routing/connection"
+require "rb_routing/query"
 require "rb_routing/base"
 require "rb_routing/exceptions"
 require "rb_routing/path_step"

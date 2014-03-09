@@ -12,9 +12,9 @@ module RbRouting
         @y2_field ||= options[:y2] || "y2"
       end
 
-      def parameters_spec
+      def routing_function_defaults
         {
-          :sql                  => cost_sql,
+          :sql                  => cost_query.sql,
           :source               => :required,
           :target               => :required,
           :directed             => false,
@@ -22,29 +22,22 @@ module RbRouting
         }
       end
 
-      def routing_query
+      def routing_function_definition
         {:pgr_astar => [:sql, :source, :target, :directed, :has_reverse_cost]}
       end
 
-      def cost_sql
-        "'SELECT #{@id_field} as id, 
-          #{@source_field} as source, 
-          #{@target_field} as target, 
-          #{@x1_field} as x1,
-          #{@x2_field} as x2,
-          #{@y1_field} as y1,
-          #{@y2_field} as y2,          
-          #{@cost_field} as cost,
-          #{@reverse_cost_field} as reverse_cost
-          FROM #{@edge_table}'"
-      end
-
-      def results_sql(options = {})
-        "SELECT seq, id1 AS node, id2 AS edge, cost, reverse_cost, name, ST_AsGeoJSON(the_geom) AS the_geom
-          FROM #{routing_query_to_sql(options)},
-          #{@edge_table}
-          WHERE #{@edge_table}.#{@id_field} = id2
-          ORDER BY seq;"
+      def cost_query_select
+        {
+          'id'            => @id_field,
+          'source'        => @source_field,
+          'target'        => @target_field,
+          'x1'            => @x1_field,
+          'x2'            => @x2_field,
+          'y1'            => @y1_field,
+          'y2'            => @y2_field,
+          'cost'          => @cost_field,
+          'reverse_cost'  => @reverse_cost_field 
+        }
       end
 
     end
