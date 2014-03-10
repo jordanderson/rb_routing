@@ -1,6 +1,6 @@
 # RbRouting
 
-A ruby wrapper for some pgRouting (http://pgrouting.org/) shortest-path functions
+A ruby wrapper for some pgRouting 2.0 (http://pgrouting.org/) shortest-path functions
 
 ## Preparing a pgRouting database
 
@@ -30,16 +30,15 @@ To get started, the following should download OpenStreetMap (OSM) data for San F
     $ curl http://osm-extracted-metros.s3.amazonaws.com/san-francisco.osm.bz2 | bunzip2 > /tmp/sf.osm
     $ irb
     irb> require 'rb_routing'
-    irb> trsp = RbRouting::Router::TrspByVertex.new :user => "postgres", :port => 6969, :password => "postgres"
+    irb> trsp = RbRouting::Router::TrspByVertex.new :user => "postgres", :port => 6969, :password => "postgres", :database => "routing"
     irb> trsp.import_osm_data "/tmp/sf.osm", "examples/mapconfig.xml"
     irb> trsp.run :source => 550, :target => 5463
-    irb> trsp.result.map {|r| r["name"] }.reject {|r| r.blank? }.join(" -> ")
-    => "Davenport Avenue -> Davenport Avenue -> Carson Street -> Adelaide Street -> Huntington Street -> ..."
+    irb> trsp.path.to_json
 
 ## To Do
 
 - ~~Edge-to-edge version of TRSP~~
-- Create a result class to simplify output of various formats
+- ~~Create a result class to simplify output of various formats~~
 - Tests
 - Turn-by-turn directions
 - Complex examples e.g. user preferences, turn restrictions

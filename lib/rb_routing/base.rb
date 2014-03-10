@@ -107,7 +107,7 @@ module RbRouting
 
     def results_query
       select_args = results_query_select.map {|k,v| Sequel.as(v, k) }
-      connection.select(*select_args).from(results_query_from).where(results_query_where)
+      connection.select(*select_args).from(*results_query_from).where(results_query_where)
     end
 
     def routing_function 

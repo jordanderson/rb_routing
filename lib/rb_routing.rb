@@ -14,6 +14,7 @@ require "rb_routing/path_step"
 require "rb_routing/path"
 require "rb_routing/router/trsp_by_vertex"
 require "rb_routing/router/trsp_by_edge"
+require "rb_routing/router/trsp_by_edge_with_joins"
 require "rb_routing/router/dijkstra"
 require "rb_routing/router/a_star"
 
