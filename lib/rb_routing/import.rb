@@ -22,16 +22,4 @@ module RbRouting
     return true
   end
 
-  def self.create_topology( edge_table, 
-                            tolerance, 
-                            the_geom_field = "the_geom", 
-                            id_field = "id",
-                            source_field = "source",
-                            target_field = "target",
-                            rows_where = "true"
-                          )
-
-  end
-
-
 end
