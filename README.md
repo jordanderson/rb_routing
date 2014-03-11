@@ -39,6 +39,6 @@ To get started, the following should download OpenStreetMap (OSM) data for San F
 
 - ~~Edge-to-edge version of TRSP~~
 - ~~Create a result class to simplify output of various formats~~
-- Tests
+- More tests
 - Turn-by-turn directions
-- Complex examples e.g. user preferences, turn restrictions
+- Complex examples e.g. ~~joins back to edge table~~, user preferences, turn restrictions
