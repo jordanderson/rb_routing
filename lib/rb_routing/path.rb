@@ -34,7 +34,7 @@ module RbRouting
 
     def to_s
       if !steps.blank? 
-        "From edge #{steps.first.edge} to edge #{steps.last.edge}" 
+        "From edge #{steps.first[:edge]} to edge #{steps.last[:edge]}" 
       else
         super
       end

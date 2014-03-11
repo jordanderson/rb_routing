@@ -11,6 +11,10 @@ module RbRouting
       @result.to_json(*a)
     end
 
+    def [](result_key)
+      @result[result_key.to_sym]
+    end
+
   end
 
 end
