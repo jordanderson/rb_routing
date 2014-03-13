@@ -17,6 +17,10 @@ module RbRouting
         end
       end
 
+      @steps.first.data.each_key do |key|
+        self.class.send(:define_method, "all_#{key.to_s.pluralize}".to_sym) { @steps.map {|s| s[key] }}
+      end
+
       @number_of_steps = @steps.size
     end
 
@@ -30,6 +34,10 @@ module RbRouting
 
     def number_of_steps 
       @number_of_steps ||= steps.size
+    end
+
+    def total_cost
+      steps.map {|s| s[:cost] }.inject {|c, sum| sum + c}
     end
 
     def to_s

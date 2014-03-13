@@ -146,7 +146,8 @@ module RbRouting
       validations(options)
       @run_options = options
 
-      puts "Routing options: #{options}"
+      puts "Routing options: #{options}" if options[:debug]
+       
       begin
         @result = results_query.to_a
         @path = RbRouting::Path.new @result

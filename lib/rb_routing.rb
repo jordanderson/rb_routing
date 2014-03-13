@@ -1,4 +1,5 @@
 require 'active_support/core_ext/object/blank.rb'
+require 'active_support/core_ext/string/inflections.rb'
 require 'pg'
 require 'sequel'
 require 'json'
@@ -16,4 +17,8 @@ require "rb_routing/router/trsp_by_vertex"
 require "rb_routing/router/trsp_by_edge"
 require "rb_routing/router/trsp_by_edge_with_joins"
 require "rb_routing/router/dijkstra"
+require "rb_routing/router/bd_dijkstra"
 require "rb_routing/router/a_star"
+require "rb_routing/router/bd_a_star"
+require "rb_routing/router/apsp_johnson"
+require "rb_routing/router/apsp_warshall"

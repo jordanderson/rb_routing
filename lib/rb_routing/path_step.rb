@@ -15,6 +15,10 @@ module RbRouting
       @result[result_key.to_sym]
     end
 
+    def data
+      @result
+    end
+
   end
 
 end
