@@ -7,12 +7,12 @@ module RbRouting
 
       raise "Error: Can't create path with #{path_steps.class} objects. Please use an Array." if path_steps.class != Array
       path_steps.each do |step|
-        if step.class == RbRouting::PathStep
+        if step.class == step_class
           @steps << step
         elsif step.class == Hash
-          @steps << RbRouting::PathStep.new(step)
+          @steps << step_class.new(step)
         else
-          raise "Error: Can't create path with #{step.class} objects. Please use PathSteps or Hashes."
+          raise "Error: Can't create path with #{step.class} objects."
           return false
         end
       end
@@ -22,6 +22,10 @@ module RbRouting
       end
 
       @number_of_steps = @steps.size
+    end
+
+    def step_class
+      RbRouting::PathStep
     end
 
     def steps

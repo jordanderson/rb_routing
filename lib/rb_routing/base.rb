@@ -56,6 +56,10 @@ module RbRouting
       @path
     end
 
+    def path_class
+      RbRouting::Path
+    end
+
     def routing_function_defaults
       "define in subclass"
     end
@@ -147,10 +151,10 @@ module RbRouting
       @run_options = options
 
       puts "Routing options: #{options}" if options[:debug]
-       
+
       begin
         @result = results_query.to_a
-        @path = RbRouting::Path.new @result
+        @path = path_class.new @result
       rescue => e
         @errors << "#{e}: #{e.backtrace}"
         return false

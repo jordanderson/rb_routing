@@ -58,7 +58,6 @@ describe RbRouting do
 
   end
 
-
   it "finds the shortest path with TRSP by vertex" do
     @trsp_v.run :source => 10, :target => 1
     expect(@trsp_v.path.all_nodes).to eq([10, 7, 2, 1])
@@ -136,7 +135,6 @@ describe RbRouting do
 
     @apsp_warshall.run :directed => true, :has_reverse_cost => true
     expect(@apsp_warshall.path.total_cost).to eq(87)
-
   end
 
 end

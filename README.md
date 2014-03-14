@@ -42,3 +42,4 @@ To get started, the following should download OpenStreetMap (OSM) data for San F
 - More tests
 - Turn-by-turn directions
 - Complex examples e.g. ~~joins back to edge table~~, user preferences, turn restrictions
+- Documentation
