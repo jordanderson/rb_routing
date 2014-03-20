@@ -1,6 +1,32 @@
-module RbRouting
-
-  class Base
+module RbRouting #:nodoc:
+  # = RbRouting
+  #
+  # RbRouting objects primarily consist of:
+  # - Parameters used to connect to a pgRouting-enabled postgres database
+  # - Methods that define the SQL queries used to call pgRouting's provided shortest path functions
+  #
+  # Most of pgRouting's shortest path functions require two SQL statements:
+  #
+  # - Cost query - A query that should return a particular set of columns that define key inputs 
+  #                into the routing function. For example, the Dijkstra algorithm requires:
+  #                ``` SELECT id, source, target, cost [,reverse_cost] FROM edge_table ``` where
+  #                the reverse_cost column is optional. 
+  #
+  #                This defines the graph that will be analyzed by the shortest path function and 
+  #                the columns (or expressions) used to calculate the cost of traversing each edge.
+  #
+  # - Results query - A query that -- most importantly -- calls a pgRouting function with the 
+  #                   required parameters, and then optionally joins that result set to another table
+  #                   or view to enrich the data (e.g. street names, OSM tags, etc.).
+  #
+  #                   All of pgRouting's shortest path functions return their results using a custom
+  #                   postgres data type called ```pgr_costResult```: 
+  #                   ```seq``` - the step number of the path
+  #                   ```id1``` - typically the node id 
+  #                   ```id2``` - typically the edge id
+  #                   ```cost``` - the cost incurred at that step
+  #
+  class Base 
 
     def set_db_params(options = {})
       @db           ||= options[:database]
