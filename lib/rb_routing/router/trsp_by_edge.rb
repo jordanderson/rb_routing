@@ -1,6 +1,14 @@
 module RbRouting
   module Router
 
+    # Find the shortest path from edge to edge via Turn-restricted shortest path algorithm 
+    # (http://docs.pgrouting.org/2.0/en/src/trsp/doc/index.html#trsp)
+    # 
+    #   router = RbRouting::Router::TrspByEdge.new  :host => 'localhost', :database => 'routing', 
+    #                                               :user => 'routing', :edge_table => 'ways',
+    #                                               :id => :id, :cost => :cost, :reverse_cost => :reverse_cost 
+    #
+    #   router.run :source_edge => 10, :target_edge => 1
     class TrspByEdge < RbRouting::Base
 
        def routing_function_defaults

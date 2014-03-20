@@ -35,6 +35,12 @@ To get started, the following should download OpenStreetMap (OSM) data for San F
     irb> trsp.run :source => 550, :target => 5463
     irb> trsp.path.to_json
 
+## Help and Docs
+
+- http://rdoc.info/github/jordanderson/rb_routing/frames/file/README.md
+- pgRouting 2.0 docs: http://docs.pgrouting.org/2.0/en/doc/index.html
+- pgRouting source: https://github.com/pgRouting/pgrouting
+
 ## To Do
 
 - ~~Edge-to-edge version of TRSP~~
@@ -42,4 +48,4 @@ To get started, the following should download OpenStreetMap (OSM) data for San F
 - More tests
 - Turn-by-turn directions
 - Complex examples e.g. ~~joins back to edge table~~, user preferences, turn restrictions
-- Documentation
+- More documentation

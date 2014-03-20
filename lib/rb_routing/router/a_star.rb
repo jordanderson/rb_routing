@@ -1,6 +1,13 @@
 module RbRouting
   module Router
 
+    # Find the shortest path via A* algorithm (http://docs.pgrouting.org/2.0/en/src/astar/doc/index.html#pgr-astar)
+    # 
+    #   @a_star = RbRouting::Router::AStar.new  :host => 'localhost', :database => 'routing', 
+    #                                           :user => 'routing', :edge_table => 'ways',
+    #                                           :id => :id, :cost => :cost, :reverse_cost => :reverse_cost 
+    #
+    #   @a_star.run :source => 10, :target => 1
     class AStar < RbRouting::Base
 
       def set_routing_params(options = {})

@@ -1,6 +1,14 @@
 module RbRouting
   module Router
 
+    # Find the shortest path from vertex to vertex via Turn-restricted shortest path algorithm 
+    # (http://docs.pgrouting.org/2.0/en/src/trsp/doc/index.html#trsp)
+    # 
+    #   router = RbRouting::Router::TrspByVertex.new  :host => 'localhost', :database => 'routing', 
+    #                                                 :user => 'routing', :edge_table => 'ways',
+    #                                                 :id => :id, :cost => :cost, :reverse_cost => :reverse_cost 
+    #
+    #   router.run :source => 10, :target => 1
     class TrspByVertex < RbRouting::Base
 
       def routing_function_defaults
