@@ -1,4 +1,4 @@
-module RbRouting #:nodoc:
+module RbRouting
   # = RbRouting
   #
   # RbRouting objects primarily consist of:
@@ -31,7 +31,7 @@ module RbRouting #:nodoc:
   # By default, 
   class Base 
 
-    def set_db_params(options = {}) #:nodoc:
+    def set_db_params(options = {})
       @db           ||= options[:database]
       @host         ||= options[:host]          || "localhost"
       @user         ||= options[:user] 
@@ -44,7 +44,7 @@ module RbRouting #:nodoc:
       connect
     end
 
-    def set_routing_params(options = {}) #:nodoc:
+    def set_routing_params(options = {})
       @id_field           ||= options[:id]              || :gid
       @source_field       ||= options[:source]          || :source
       @target_field       ||= options[:target]          || :target
@@ -53,7 +53,7 @@ module RbRouting #:nodoc:
       @edge_table         ||= options[:edge_table]      || :ways
     end
 
-    def set_import_params(options = {}) #:nodoc:
+    def set_import_params(options = {})
       @clean_tables   ||= options[:clean]       || true
       @skip_nodes     ||= options[:skip_nodes]  || true
       @import_options = {:clean_tables => @clean_tables, :skip_nodes => @skip_nodes}
@@ -151,7 +151,7 @@ module RbRouting #:nodoc:
       }
     end
 
-    def results_query_from #:nodoc:
+    def results_query_from :key => "value", 
       Sequel.function(routing_function, *routing_function_params)
     end
 
@@ -160,25 +160,25 @@ module RbRouting #:nodoc:
       ""
     end
 
-    def cost_query #:nodoc:
+    def cost_query
       select_args = cost_query_select.map {|k,v| Sequel.as(v, k) }
       connection.select(*select_args).from(cost_query_from).where(cost_query_where)
     end
 
-    def results_query #:nodoc:
+    def results_query
       select_args = results_query_select.map {|k,v| Sequel.as(v, k) }
       connection.select(*select_args).from(*results_query_from).where(results_query_where)
     end
 
-    def routing_function #:nodoc:
+    def routing_function
       routing_function_definition.keys.first
     end
 
-    def routing_function_params #:nodoc:
+    def routing_function_params
       routing_function_definition.values.flatten.map {|v| @run_options[v] }.reject {|p| p.nil? }
     end
 
-    def set_defaults(options = {}) #:nodoc:
+    def set_defaults(options = {})
       routing_function_defaults.each do |key, value|
         options[key] = value if options[key].blank? and ![:optional, :required].include?(value) 
       end
@@ -186,7 +186,7 @@ module RbRouting #:nodoc:
       options
     end
 
-    def validations(options = {}) #:nodoc:
+    def validations(options = {})
       @errors = []
       routing_function_defaults.each do |key, value|
         @errors << "'#{key}'" if options[key].blank? and value == :required
