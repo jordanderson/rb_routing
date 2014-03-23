@@ -5,7 +5,8 @@ module RbRouting
   # - Parameters used to connect to a pgRouting-enabled postgres database
   # - Methods that define the SQL queries used to call pgRouting's provided shortest path functions
   #
-  # Most of pgRouting's shortest path functions require two SQL statements:
+  # Most of pgRouting's shortest path functions require two SQL statements: a cost query 
+  # and a results query
   #
   # == Cost query
   # A query that should return a particular set of columns that define key inputs 
@@ -15,6 +16,24 @@ module RbRouting
   #
   # This defines the graph that will be analyzed by the shortest path function and 
   # the columns (or expressions) used to calculate the cost of traversing each edge.
+  #
+  # The cost query is defined by 3 methods:
+  # - <tt>cost_query_select</tt> - returns a has containing the fields to select and their aliases
+  # - <tt>cost_query_from</tt> - defaults to the <tt>edge_table</tt>
+  # - <tt>cost_query_where</tt> - defaults to a blank string. This would allow you to narrow down the
+  #   network the shortest path function is searching.
+  #
+  # The default <tt>cost_query_select</tt> method is simply:
+  # <tt>
+  # {
+  #   'id'            => @id_field,
+  #   'source'        => @source_field,
+  #   'target'        => @target_field,
+  #   'cost'          => @cost_field,
+  #   'reverse_cost'  => @reverse_cost_field 
+  # }
+  # </tt>
+  #
   #
   # == Results query
   # A query that -- most importantly -- calls a pgRouting function with the 
@@ -28,7 +47,7 @@ module RbRouting
   # - <tt>id2</tt> - typically the edge id
   # - <tt>cost</tt> - the cost incurred at that step
   #
-  # By default, 
+  #  
   class Base 
 
     def set_db_params(options = {})
