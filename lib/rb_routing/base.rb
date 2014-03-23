@@ -23,17 +23,6 @@ module RbRouting
   # - <tt>cost_query_where</tt> - defaults to a blank string. This would allow you to narrow down the
   #   network the shortest path function is searching.
   #
-  # The default <tt>cost_query_select</tt> method is simply:
-  # <tt>
-  # {
-  #   'id'            => @id_field,
-  #   'source'        => @source_field,
-  #   'target'        => @target_field,
-  #   'cost'          => @cost_field,
-  #   'reverse_cost'  => @reverse_cost_field 
-  # }
-  # </tt>
-  #
   # == Results query
   # A query that -- most importantly -- calls a pgRouting function with the 
   # required parameters, and then optionally joins that result set to another table
@@ -167,7 +156,7 @@ module RbRouting
       }
     end
 
-    def results_query_from :key => "value", 
+    def results_query_from
       Sequel.function(routing_function, *routing_function_params)
     end
 
