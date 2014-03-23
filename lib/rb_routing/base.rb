@@ -34,7 +34,6 @@ module RbRouting
   # }
   # </tt>
   #
-  #
   # == Results query
   # A query that -- most importantly -- calls a pgRouting function with the 
   # required parameters, and then optionally joins that result set to another table
@@ -46,8 +45,6 @@ module RbRouting
   # - <tt>id1</tt> - typically the node id 
   # - <tt>id2</tt> - typically the edge id
   # - <tt>cost</tt> - the cost incurred at that step
-  #
-  #  
   class Base 
 
     def set_db_params(options = {})
