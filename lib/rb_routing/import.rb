@@ -15,10 +15,10 @@ module RbRouting
     additional_options << "-passwd #{options[:password]}" if !options[:password].blank?
     additional_options << "-clean" if !options[:clean_tables].blank?
     additional_options << "-skipnodes" if !options[:skip_nodes].blank?
-    additional_options << "-prefixtables #{options[:prefixtables]}" if !options[:prefixtables].blank?
+    additional_options << "-prefixtables #{options[:table_prefix]}" if !options[:table_prefix].blank?
 
     puts "Running osm2pgrouting -file #{file_name} -dbname #{database} -user #{user} -conf #{config_file} #{additional_options.join(' ')}"
-    value = `osm2pgrouting -file #{file_name} -dbname #{database} -user #{user} -conf #{config_file} #{additional_options.join(' ')}`
+    value = system "osm2pgrouting -file #{file_name} -dbname #{database} -user #{user} -conf #{config_file} #{additional_options.join(' ')}"
     return true
   end
 
