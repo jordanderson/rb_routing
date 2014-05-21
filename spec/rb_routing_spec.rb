@@ -5,13 +5,14 @@ require File.join(File.dirname(File.expand_path(__FILE__)), 'spec_helper.rb')
 
 describe RbRouting, "import_osm_data" do
   it "runs osm2pgouting" do
-    osm_file    = "../examples/san-francisco.osm"
+    osm_file    = "./examples/honolulu.osm"
     database    = $database
     db_user     = $user
     db_password = $password
-    config_file = "../examples/mapconfig.xml"
+    config_file = "./examples/mapconfig.xml"
 
-    RbRouting.import_osm_data(osm_file, database, db_user, config_file, {:password => db_password})
+    RbRouting.import_osm_data(osm_file, database, db_user, config_file, 
+                              {:password => db_password, :host => $host, :port => $port, :clean_tables => true})
   end
 end
 
@@ -48,6 +49,10 @@ describe RbRouting do
     @apsp_warshall = RbRouting::Router::ApspWarshall.new  :host => $host, :port => $port, :database => $database, 
                                                           :user => $user, :password => $password, :edge_table => :edge_table,
                                                           :id => :id, :cost => :cost, :reverse_cost => :reverse_cost
+
+    @a_route = RbRouting::Route.new :host => $host, :port => $port, :database => $database, 
+                                  :user => $user, :password => $password, :edge_table => :edge_table,
+                                  :id => :id, :cost => :cost, :reverse_cost => :reverse_cost
 
   end
   
@@ -135,6 +140,10 @@ describe RbRouting do
 
     @apsp_warshall.run :directed => true, :has_reverse_cost => true
     expect(@apsp_warshall.path.total_cost).to eq(87)
+  end
+
+  it "finds a multi-point shortest path by edge id" do
+    @a_route.route_by_edges [14, 5, 1]
   end
 
 end

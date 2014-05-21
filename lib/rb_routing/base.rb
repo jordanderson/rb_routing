@@ -36,26 +36,10 @@ module RbRouting
   # - `cost` - the cost incurred at that step
   class Base 
 
+    include ::RbRouting::RouteOptions
+
     def set_db_params(options = {})
-      @db           ||= options[:database]
-      @host         ||= options[:host]          || "localhost"
-      @user         ||= options[:user] 
-      @port         ||= options[:port]          || "5432"
-      @password     ||= options[:password]
-      @table_prefix ||= options[:table_prefix]
-      @db_options    = {:database => @db, :host => @host, :user => @user, 
-                        :port => @port, :password => @password, :table_prefix => @table_prefix}
-
-      connect
-    end
-
-    def set_routing_params(options = {})
-      @id_field           ||= options[:id]              || :gid
-      @source_field       ||= options[:source]          || :source
-      @target_field       ||= options[:target]          || :target
-      @cost_field         ||= options[:cost]            || :length
-      @reverse_cost_field ||= options[:reverse_cost]    || :length
-      @edge_table         ||= options[:edge_table]      || :ways
+      connect(options)
     end
 
     def set_import_params(options = {})
@@ -73,13 +57,17 @@ module RbRouting
     end
 
     # A connection to the postgres database.
-    def connection 
+    def db
       @connection.pg rescue nil
     end
 
+    def connection 
+      @connection rescue nil
+    end
+
     # Connect to the postgres database.
-    def connect
-      @connection ||= ::RbRouting::Connection.new(@db_options)
+    def connect(options = {})
+      @connection ||= ::RbRouting::Connection.new(options)
     end
 
     # Display an array of validation or routing errors that have been raised since the last run.
@@ -171,12 +159,12 @@ module RbRouting
 
     def cost_query
       select_args = cost_query_select.map {|k,v| Sequel.as(v, k) }
-      connection.select(*select_args).from(cost_query_from).where(cost_query_where)
+      db.select(*select_args).from(cost_query_from).where(cost_query_where)
     end
 
     def results_query
       select_args = results_query_select.map {|k,v| Sequel.as(v, k) }
-      connection.select(*select_args).from(*results_query_from).where(results_query_where)
+      db.select(*select_args).from(*results_query_from).where(results_query_where)
     end
 
     def routing_function

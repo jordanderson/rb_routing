@@ -7,6 +7,7 @@ require 'debugger'
 
 require "rb_routing/version"
 require "rb_routing/connection"
+require "rb_routing/route_options"
 require "rb_routing/import"
 require "rb_routing/query"
 require "rb_routing/base"
@@ -22,3 +23,4 @@ require "rb_routing/router/a_star"
 require "rb_routing/router/bd_a_star"
 require "rb_routing/router/apsp_johnson"
 require "rb_routing/router/apsp_warshall"
+require "rb_routing/route"
